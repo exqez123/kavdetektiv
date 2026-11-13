@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Відгуки гостей — Кав’ярня-детектив, Одеса</title>
+<meta name="description" content="Відгуки гостей кав’ярні-детектива та форма, щоб залишити свій.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=PT+Mono&family=Alegreya:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+<header class="top" id="top"></header>
+<main>
+
+<div class="folder" data-tab="Свідчення гостей">
+  <h1>Відгуки</h1>
+  <p class="lead">Що кажуть ті, хто вже розкривав справи за кавою. Залиште і свої свідчення — за відгук нараховуємо 15 балів у досьє.</p>
+  <form class="card" id="rform" novalidate>
+    <div class="grid2">
+      <div><label for="rname">Ім’я</label><input id="rname" autocomplete="name" maxlength="30"></div>
+      <div><label for="rstars">Оцінка</label><select id="rstars"><option value="5">★★★★★ — чудово</option><option value="4">★★★★ — добре</option><option value="3">★★★ — нормально</option><option value="2">★★ — так собі</option><option value="1">★ — погано</option></select></div>
+    </div>
+    <label for="rtext">Ваш відгук</label><textarea id="rtext" maxlength="500" placeholder="Яку справу розслідували? Що сподобалося?"></textarea>
+    <p class="err" id="rerr" role="alert"></p>
+    <button class="btn main" type="submit">Залишити відгук</button>
+  </form>
+</div>
+<section><h2 id="rcount"></h2><div id="rlist"></div>
+<p class="note">Відгуки з позначкою «приклад» показують, як виглядатиме розділ; зараз нові відгуки зберігаються у вашому браузері.</p></section>
+</main>
+<footer id="foot"></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const $=id=>document.getElementById(id),u=Auth.current();if(u)$('rname').value=u.name;
+const SEED=[{n:'Ірина',s:5,t:'Брали справу на 30 хвилин утрьох. Розкрили за дві хвилини до кінця — десерт був заслужений!',d:'2026-11-07',demo:1},
+{n:'Андрій',s:5,t:'Привів відділ на детективний сніданок. Найкращий тімбілдинг за рік, і кава справді смачна.',d:'2026-11-05',demo:1},
+{n:'Катя',s:4,t:'Атмосфера як у кабінеті слідчого. Справу не розкрили, але прийдемо ще — тепер це питання честі.',d:'2026-11-02',demo:1}];
+function draw(){const all=[...DB.get('reviews',[]).slice().reverse(),...SEED];
+  const real=all.length,avg=(all.reduce((a,r)=>a+r.s,0)/real).toFixed(1);
+  $('rcount').textContent=`Відгуків: ${real}, середня оцінка ${avg}`;
+  $('rlist').innerHTML=all.map(r=>`<article class="review"><b>${esc(r.n)}</b>${r.demo?'<span class="demo">приклад</span>':''} <span class="stars" aria-label="Оцінка ${r.s} з 5">${'★'.repeat(r.s)}${'☆'.repeat(5-r.s)}</span> <span class="muted">${fmtDate(r.d)}</span><p>${esc(r.t)}</p></article>`).join('')}
+draw();
+$('rform').onsubmit=e=>{e.preventDefault();const n=$('rname').value.trim(),t=$('rtext').value.trim(),err=$('rerr');err.className='err';
+  if(n.length<2){err.textContent='Вкажіть ім’я.';return}
+  if(t.length<10){err.textContent='Напишіть хоча б кілька слів (від 10 символів).';return}
+  const rs=DB.get('reviews',[]);rs.push({n,s:+$('rstars').value,t,d:new Date().toISOString().slice(0,10),user:u?u.email:null});DB.set('reviews',rs);
+  $('rtext').value='';let msg='Дякуємо, відгук опубліковано.';
+  if(u){const mine=rs.filter(r=>r.user===u.email).length;if(mine===1){Auth.addPoints(15);msg+=' +15 балів у досьє.'}}
+  err.className='err okmsg';err.textContent=msg;draw()};
+</script>
+</body>
+</html>

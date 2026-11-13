@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Кава з собою і детективні ігри — Кав’ярня-детектив, Одеса</title>
+<meta name="description" content="Кав’ярня в центрі Одеси: кава з собою або детективна гра на 15, 30 чи 60 хвилин.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=PT+Mono&family=Alegreya:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+<header class="top" id="top"></header>
+<main>
+
+<div class="folder hero" data-tab="Справа № 1">
+  <div class="stamp">ВІДКРИТО<b>8:00–20:00</b>щодня</div>
+  <h1>Кава з собою. Або справа на столі.</h1>
+  <p class="lead">Кав’ярня в центрі Одеси, де можна просто взяти капучино — або сісти з друзями й розкрити детективну справу на 15, 30 чи 60 хвилин. Встигли — отримуєте приз.</p>
+  <div class="btns"><a class="btn main" href="bron.html">Забронювати гру</a><a class="btn" href="viktoryna.html">Пройти вікторину</a></div>
+</div>
+<section>
+  <h2>Як проходить гра</h2>
+  <p class="intro">Окремої плати за гру немає. Ви замовляєте напої й десерти на суму мінімального чеку — і отримуєте справу.</p>
+  <ol class="steps">
+    <li><h3>Обираєте формат</h3><p>15, 30 або 60 хвилин — залежно від того, скільки вас і скільки є часу.</p></li>
+    <li><h3>Отримуєте конверт</h3><p>Докази, свідчення, мапи й фото підозрюваних. Бариста запускає таймер.</p></li>
+    <li><h3>Розслідуєте</h3><p>За кавою, всією компанією. Підказок немає — лише ваша логіка.</p></li>
+    <li><h3>Називаєте винного</h3><p>Бариста звіряє відповідь. Правильно і вчасно — приз від закладу.</p></li>
+  </ol>
+</section>
+<section>
+  <h2>Формати справ</h2>
+  <p class="intro">Мінімальний чек — це сума, яку компанія витрачає на меню під час гри.</p>
+  <div class="tags">
+    <article class="tag"><h3>15 хв</h3><p class="who">1–2 гравці</p><p>Коротка справа між парами або в обідню перерву.</p><p class="min">Мінімальний чек <b>300 грн</b></p></article>
+    <article class="tag"><h3>30 хв</h3><p class="who">3–4 гравці</p><p>Справа для компанії друзів: більше доказів, більше підозрюваних.</p><p class="min">Мінімальний чек <b>800 грн</b></p></article>
+    <article class="tag"><h3>60 хв</h3><p class="who">6–8 гравців</p><p>Велике розслідування для команди, свята чи тімбілдингу.</p><p class="min">Мінімальний чек <b>1 200 грн</b></p></article>
+  </div>
+  <p class="note">Приз за розкриту справу — безкоштовний десерт, знижка на наступну гру або фірмовий значок. Не встигли — кава й десерти вже з вами, а справу можна спробувати іншим разом.</p>
+</section>
+<section class="dark">
+  <h2>Справа дня</h2>
+  <p class="muted" id="cnum" style="font-family:var(--mono);color:inherit;opacity:.75;margin:0 0 6px"></p>
+  <div id="ctext"></div>
+  <div class="opts" id="copts" role="group" aria-label="Варіанти відповіді"></div>
+  <p class="answer" id="cres" hidden aria-live="polite"></p>
+  <div class="btns" style="margin-top:16px"><button class="btn" type="button" id="hintb" aria-expanded="false">Підказка</button><button class="btn" type="button" id="reveal">Здаюся, показати відповідь</button></div>
+  <p class="answer" id="hint" hidden></p>
+  <p class="note" style="color:inherit;opacity:.75">Одна спроба на день. Правильна відповідь без підказки — +10 балів у досьє, з підказкою — +5.</p>
+</section>
+<section>
+  <h2>Досьє детектива</h2>
+  <div class="two">
+    <p>Зареєструйтеся на сайті — і отримаєте особисте досьє. Бали нараховуються за бронювання, вікторину й відгуки, а з ними росте ранг: від Стажера до Комісара зі знижкою до 10 %.</p>
+    <p><a class="btn main" href="kabinet.html">Відкрити досьє</a></p>
+  </div>
+</section>
+<section>
+  <h2>Для компаній і свят</h2>
+  <div class="two" style="margin-top:22px">
+    <div><h3>Детективний сніданок для офісу</h3><p>Тімбілдинг поруч з роботою: 60-хвилинна справа на 6–8 осіб, кава й десерти. Ранкові слоти з 8:00 до 11:00.</p><ul><li>рахунок і акт для бухгалтерії</li><li>пробна гра на 15 хвилин — безкоштовно</li></ul></div>
+    <div><h3>День народження вдень</h3><p>Свято з розслідуванням для 6–8 друзів: гра на 60 хвилин, десерти, сервірування столу.</p><ul><li>бронювання за 3 дні</li><li>торт від партнерської пекарні</li></ul></div>
+  </div>
+</section>
+<section>
+  <h2>Де нас знайти</h2>
+  <div class="two" style="border-top:2px solid var(--ink);padding-top:22px">
+    <p><span class="muted">Адреса</span><br><span data-cfg="address"></span><br><br><span class="muted">Години роботи</span><br>Щодня з 8:00 до 20:00</p>
+    <p><span class="muted">Зв’язок</span><br><a data-cfg="phone" href="#"></a><br><a data-cfg="instagram" href="#">Instagram</a> · <a data-cfg="telegram" href="#">Telegram</a><br><a data-cfg="email" href="#"></a></p>
+  </div>
+<iframe title="Мапа: центр Одеси, район Дерибасівської" loading="lazy" style="width:100%;height:320px;border:1px solid var(--line);border-radius:4px;margin-top:22px"
+   src="https://www.openstreetmap.org/export/embed.html?bbox=30.7266%2C46.4816%2C30.7386%2C46.4876&amp;layer=mapnik&amp;marker=46.4846%2C30.7326"></iframe>
+  <p class="note"><a href="https://www.openstreetmap.org/?mlat=46.4846&amp;mlon=30.7326#map=17/46.4846/30.7326">Відкрити мапу в новій вкладці</a></p>
+</section>
+</main>
+<footer id="foot"></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const CASES=[
+{t:`<p>О 9:00 з каси зникли 500 грн. У залі були троє: бариста Олег, кур’єрка Ніна і постійний гість Тарас. Кожен сказав по два твердження — і в кожного <b>одне правдиве, а друге хибне</b>.</p>
+<p>Олег: «Я не брав. Гроші взяла Ніна».<br>Ніна: «Я не брала. Тарас теж не брав».<br>Тарас: «Я не брав. Олег теж не брав».</p><p>Хто взяв гроші?</p>`,
+h:'Перевірте кожного підозрюваного по черзі: якщо він винен, чи буде в усіх трьох рівно по одній правді?',
+a:'Тарас. Якщо винен Олег — обидва його твердження хибні; якщо Ніна — обидва твердження Олега правдиві. Лише з Тарасом у кожного виходить одна правда й одна неправда.'},
+{t:`<p>Чизкейк «Доказ» зник із вітрини. Вітрина замикається, ключ висить за барною стійкою. Відомо таке:</p>
+<p>— о 14:00 чизкейк був на місці, а о 14:22 гостя хотіла його замовити — його вже не було;<br>— бариста Лія з 14:00 до 14:20 без перерви готувала каву для черги, це бачили шестеро гостей;<br>— прибиральник Гнат прийшов на зміну о 14:25, що записано в журналі;<br>— постачальниця Зоя о 14:10 привезла молоко й заносила його за стійку;<br>— гість Павло весь час сидів біля вікна і до стійки не підходив.</p><p>Хто взяв чизкейк?</p>`,
+h:'Потрібні дві речі одночасно: бути в кав’ярні між 14:00 і 14:22 та мати доступ до ключа за стійкою.',
+a:'Зоя. Гнат прийшов уже після зникнення, Лія була на очах у черги, Павло не підходив до стійки. Лише Зоя була за стійкою біля ключа в потрібний час.'},
+{t:`<p>На серветці підозрюваний залишив шифр від сейфа з чотирьох цифр:</p>
+<p>«Перша цифра — скільки еспресо в одному допіо.<br>Друга — на три більша за першу.<br>Третя — сума перших двох.<br>Четверта — тривалість нашої найкоротшої гри у хвилинах, поділена на третю цифру… ні, на три».</p><p>Який код?</p>`,
+h:'Допіо — це подвійний еспресо, а найкоротша гра триває 15 хвилин.',
+a:'2575. Допіо — 2 еспресо; 2 + 3 = 5; 2 + 5 = 7; 15 : 3 = 5.'},
+{t:`<p>Гість запевняє: «Я сиджу тут із самого відкриття, з 8:00, читаю газету і нікуди не виходив. Тож о 9:30 мене не могло бути біля пограбованого кіоску».</p>
+<p>Зараз 10:30. Перед ним — чашка американо, над якою ще здіймається пара. У касі на його стіл пробито лише один чек: американо, 8:02. Бариста каже, що більше нічого йому не готував.</p><p>Чому детектив не вірить гостеві?</p>`,
+h:'Подумайте, що стається з кавою, яка стоїть на столі дві з половиною години.',
+a:'Американо, зварений о 8:02, до 10:30 давно б охолов. Гаряча чашка означає, що каву він приніс нещодавно з іншого місця — отже, виходив, і алібі руйнується.'},
+{t:`<p>За барною стійкою в ряд сидять три детективи: Ада, Борис і Віра. Один п’є еспресо, другий — лате, третій — какао.</p>
+<p>— Ада сидить не скраю.<br>— Той, хто п’є какао, сидить скраю ліворуч.<br>— Віра не п’є каву взагалі.<br>— Борис терпіти не може молоко в каві.</p><p>Хто що п’є і хто де сидить (зліва направо)?</p>`,
+h:'Почніть із того, хто може пити какао, — і одразу дізнаєтеся, хто сидить ліворуч.',
+a:'Зліва направо: Віра (какао), Ада (лате), Борис (еспресо). Віра не п’є каву — отже, какао в неї, і вона ліворуч. Ада посередині, тож Борис праворуч; він без молока — еспресо, Аді лишається лате.'}];
+const OPTS=[[['Олег','Ніна','Тарас'],2],[['Лія','Зоя','Гнат','Павло'],1],[['2475','2575','2565','1454'],1],
+[['Газета, яку він читає, вчорашня','Кава в його чашці досі гаряча','Кав’ярня відчиняється лише о 9:00','Бариста його взагалі не бачив'],1],
+[['Віра — какао, Ада — лате, Борис — еспресо','Борис — какао, Ада — еспресо, Віра — лате','Віра — какао, Ада — еспресо, Борис — лате','Ада — какао, Віра — лате, Борис — еспресо'],0]];
+const day=Math.floor((Date.now()-new Date(new Date().getFullYear(),0,0))/864e5),ci=day%CASES.length,c=CASES[ci];
+const $=id=>document.getElementById(id),today=todayISO(),u=Auth.current();
+$('cnum').textContent=`Справа ${ci+1} з ${CASES.length}. Завтра буде нова.`;$('ctext').innerHTML=c.t;$('hint').textContent='Підказка: '+c.h;
+let hinted=false;
+const getState=()=>u?((Auth.current().daily||{})[today]||null):(DB.get('guest_daily',{})[today]||null);
+function saveState(st){if(u){const cu=Auth.current();cu.daily=cu.daily||{};cu.daily[today]=st;if(st.pts)cu.points+=st.pts;Auth.save(cu)}else{const g=DB.get('guest_daily',{});g[today]=st;DB.set('guest_daily',g)}}
+function finish(st,fresh){[...$('copts').children].forEach((x,j)=>{x.disabled=true;if(j===OPTS[ci][1])x.classList.add('right');if(st.pick===j&&!st.ok)x.classList.add('wrong')});
+  $('hintb').disabled=true;$('reveal').disabled=true;const r=$('cres');r.hidden=false;
+  let msg=st.ok?'Справу розкрито! ':(st.pick<0?'Справу закрито без розгадки. ':'Цього разу не вгадали. ');
+  if(st.ok)msg+=u?`+${st.pts} балів у досьє. `:'Увійдіть у кабінет, щоб отримувати бали за справи. ';
+  r.textContent=msg+c.a+(fresh?'':' (Сьогоднішню спробу вже використано.)')}
+OPTS[ci][0].forEach((t,j)=>{const b=document.createElement('button');b.type='button';b.textContent=t;
+  b.onclick=()=>{const ok=j===OPTS[ci][1],st={ci,pick:j,ok,pts:ok&&u?(hinted?5:10):0};saveState(st);finish(st,true)};$('copts').appendChild(b)});
+$('hintb').onclick=()=>{hinted=true;$('hint').hidden=false;$('hintb').disabled=true;$('hintb').setAttribute('aria-expanded','true')};
+$('reveal').onclick=()=>{const st={ci,pick:-1,ok:false,pts:0};saveState(st);finish(st,true)};
+const prev=getState();if(prev&&prev.ci===ci)finish(prev,false);
+</script>
+</body>
+</html>

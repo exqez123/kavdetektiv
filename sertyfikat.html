@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Подарункові сертифікати — Кав’ярня-детектив, Одеса</title>
+<meta name="description" content="Подарунковий сертифікат на детективну гру з кавою: 15, 30 або 60 хвилин.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=PT+Mono&family=Alegreya:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+<header class="top" id="top"></header>
+<main>
+
+<div class="folder" data-tab="Подарунок із таємницею">
+  <h1>Подарункові сертифікати</h1>
+  <p class="lead">Подаруйте розслідування: сертифікат покриває мінімальний чек гри. Заповніть форму — ми підготуємо сертифікат, а оплатити його можна в кав’ярні, коли забиратимете.</p>
+  <div class="two">
+    <form class="card" id="gform" novalidate>
+      <label for="gfmt">Сертифікат на гру</label>
+      <select id="gfmt"><option value="15">15 хв · 1–2 гравці · 300 грн</option><option value="30" selected>30 хв · 3–4 гравці · 800 грн</option><option value="60">60 хв · 6–8 гравців · 1 200 грн</option></select>
+      <label for="gto">Кому</label><input id="gto" maxlength="30" placeholder="Ім’я отримувача">
+      <label for="gfrom">Від кого</label><input id="gfrom" maxlength="30" autocomplete="name">
+      <label for="gmsg">Побажання (необов’язково)</label><input id="gmsg" maxlength="60" placeholder="Розкрий цю справу раніше за мене!">
+      <label for="gphone">Ваш телефон</label><input id="gphone" type="tel" autocomplete="tel" placeholder="+380…">
+      <p class="err" id="gerr" role="alert"></p>
+      <button class="btn main" type="submit">Оформити сертифікат</button>
+    </form>
+    <div>
+      <div class="dossier" id="gcard" aria-label="Вигляд сертифіката">
+        <div class="stamp" id="gsum" style="position:static;display:inline-block;margin:4px 0 16px"></div>
+        <p class="muted" style="font-family:var(--mono);margin:0">Подарунковий сертифікат</p>
+        <h2 style="margin-top:6px">Кав’ярня-детектив</h2>
+        <p class="rank" id="gline"></p>
+        <dl><dt>Кому</dt><dd id="pto">—</dd><dt>Від кого</dt><dd id="pfrom">—</dd><dt>Побажання</dt><dd id="pmsg">—</dd><dt>Номер</dt><dd id="pcode">буде після оформлення</dd><dt>Дійсний</dt><dd>3 місяці від дати оформлення</dd></dl>
+      </div>
+      <div class="card" id="gdone" hidden style="margin-top:18px">
+        <p class="okmsg" id="gok"></p>
+        <p>Надішліть заявку кав’ярні — відкриється ваша пошта з готовим листом.</p>
+        <div class="btns"><a class="btn main" id="gmail" href="#">Надіслати заявку листом</a><a class="btn" href="kabinet.html">Мої сертифікати</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+</main>
+<footer id="foot"></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const $=id=>document.getElementById(id),P={15:300,30:800,60:1200},u=Auth.current();if(u)$('gfrom').value=u.name;
+function prev(){const f=$('gfmt').value;$('gsum').innerHTML='НА ГРУ<b>'+P[f].toLocaleString('uk-UA')+' грн</b>'+f+' хвилин';$('gline').textContent='Справа на '+f+' хвилин + напої й десерти на '+P[f]+' грн';
+  $('pto').textContent=$('gto').value.trim()||'—';$('pfrom').textContent=$('gfrom').value.trim()||'—';$('pmsg').textContent=$('gmsg').value.trim()||'—'}
+['gfmt','gto','gfrom','gmsg'].forEach(k=>$(k).addEventListener('input',prev));prev();
+$('gform').onsubmit=e=>{e.preventDefault();const err=$('gerr');err.textContent='';
+  const to=$('gto').value.trim(),from=$('gfrom').value.trim(),ph=$('gphone').value.trim(),f=$('gfmt').value;
+  if(to.length<2){err.textContent='Вкажіть, кому призначено сертифікат.';return}
+  if(from.length<2){err.textContent='Вкажіть, від кого сертифікат.';return}
+  if(ph.replace(/\D/g,'').length<10){err.textContent='Вкажіть номер телефону, щоб ми повідомили, коли сертифікат буде готовий.';return}
+  const code='KD-'+Math.random().toString(36).slice(2,6).toUpperCase()+'-'+Date.now().toString(36).slice(-4).toUpperCase();
+  const g={code,fmt:f,sum:P[f],to,from,msg:$('gmsg').value.trim(),phone:ph,date:todayISO(),user:u?u.email:null};
+  const all=DB.get('gifts',[]);all.push(g);DB.set('gifts',all);
+  $('pcode').textContent=code;$('gok').textContent='Сертифікат '+code+' оформлено. Сума до оплати в кав’ярні: '+P[f]+' грн.';
+  const txt=`Сертифікат ${code}\nГра: ${f} хв (${P[f]} грн)\nКому: ${to}\nВід кого: ${from}\nПобажання: ${g.msg||'—'}\nТелефон: ${ph}`;
+  $('gmail').href='mailto:'+CONFIG.email+'?subject='+encodeURIComponent('Подарунковий сертифікат '+code)+'&body='+encodeURIComponent(txt);
+  $('gform').querySelectorAll('input,select,button').forEach(x=>x.disabled=true);$('gdone').hidden=false;$('gdone').scrollIntoView({block:'center'})};
+</script>
+</body>
+</html>

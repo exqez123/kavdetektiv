@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Кабінет детектива — Кав’ярня-детектив, Одеса</title>
+<meta name="description" content="Особистий кабінет: досьє детектива, ранг, бали та бронювання.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=PT+Mono&family=Alegreya:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+<header class="top" id="top"></header>
+<main>
+
+<div id="guest" hidden>
+  <div class="folder" data-tab="Вхід до архіву">
+    <h1>Кабінет детектива</h1>
+    <p class="lead">Заведіть досьє: бали за бронювання, вікторину й відгуки, ранги зі знижкою до 10 % та всі ваші бронювання в одному місці.</p>
+    <div class="tabs"><button class="btn main small" id="tReg" type="button">Реєстрація</button><button class="btn small" id="tLog" type="button">Вхід</button></div>
+    <form class="card" id="reg" novalidate>
+      <label for="rn">Ім’я</label><input id="rn" autocomplete="name">
+      <label for="re">Електронна пошта</label><input id="re" type="email" autocomplete="email">
+      <label for="rp">Пароль (від 6 символів)</label><input id="rp" type="password" autocomplete="new-password">
+      <p class="err" id="rerr" role="alert"></p>
+      <button class="btn main" type="submit">Створити досьє</button>
+    </form>
+    <form class="card" id="log" novalidate hidden>
+      <label for="le">Електронна пошта</label><input id="le" type="email" autocomplete="email">
+      <label for="lp">Пароль</label><input id="lp" type="password" autocomplete="current-password">
+      <p class="err" id="lerr" role="alert"></p>
+      <button class="btn main" type="submit">Увійти</button>
+    </form>
+    <p class="note">Демо-режим: акаунт зберігається в цьому браузері. Не використовуйте тут пароль від інших сайтів.</p>
+  </div>
+</div>
+<div id="user" hidden>
+  <section style="margin-top:34px">
+    <div class="dossier">
+      <div class="stamp" id="dstamp"></div>
+      <p class="muted" style="font-family:var(--mono);margin:0">Досьє детектива</p>
+      <h2 id="dname"></h2>
+      <p class="rank" id="drank"></p>
+      <div class="bar" aria-hidden="true"><i id="dbar" style="background:var(--caramel)"></i></div>
+      <p class="note" id="dnext" style="margin-top:8px"></p>
+      <dl><dt>Бали</dt><dd id="dpts"></dd><dt>У справі з</dt><dd id="dsince"></dd><dt>Найкраща вікторина</dt><dd id="dbest"></dd><dt>Пошта</dt><dd id="dmail"></dd></dl>
+      <div class="ranks" id="dranks"></div>
+    </div>
+  </section>
+  <section>
+    <h2>Мої бронювання</h2>
+    <div id="blist"></div>
+    <div class="btns" style="margin-top:18px"><a class="btn main" href="bron.html">Нове бронювання</a><a class="btn" href="viktoryna.html">Вікторина</a><button class="btn" id="out" type="button">Вийти</button></div>
+  </section>
+  <section>
+    <h2>Розкриті справи</h2>
+    <p id="ksolved"></p>
+    <div class="btns"><a class="btn" href="spravy.html">Архів справ</a><a class="btn" href="index.html">Справа дня</a></div>
+  </section>
+  <section>
+    <h2>Мої сертифікати</h2>
+    <div id="kgifts"></div>
+  </section>
+  <section>
+    <h2>Як заробити бали</h2>
+    <table><tbody><tr><td>Реєстрація</td><td class="num">+20</td></tr><tr><td>Бронювання гри</td><td class="num">+30</td></tr><tr><td>Перший відгук</td><td class="num">+15</td></tr><tr><td>Справа дня без підказки (з підказкою +5)</td><td class="num">+10</td></tr><tr><td>Вікторина (залежно від результату)</td><td class="num">до +20</td></tr></tbody></table>
+  </section>
+</div>
+</main>
+<footer id="foot"></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+function render(){const u=Auth.current();$('guest').hidden=!!u;$('user').hidden=!u;if(!u)return;
+  const r=rankOf(u.points),nx=nextRank(u.points);
+  $('dname').textContent=u.name;$('drank').textContent='Ранг: '+r.n;$('dpts').textContent=u.points;$('dsince').textContent=fmtDate(u.since);
+  $('dbest').textContent=u.best?u.best+' балів ('+u.games+' ігор)':'ще не грали';$('dmail').textContent=u.email;
+  $('dstamp').innerHTML='ЗНИЖКА<b>'+r.d+' %</b>на меню';
+  $('dbar').style.width=(nx?Math.round((u.points-r.p)/(nx.p-r.p)*100):100)+'%';
+  $('dnext').textContent=nx?`До рангу «${nx.n}» (знижка ${nx.d} %) залишилося ${nx.p-u.points} балів.`:'Найвищий ранг. Справу закрито — вітаємо, Комісаре!';
+  $('dranks').innerHTML=RANKS.map(x=>`<span class="${x.n===r.n?'on':''}">${x.n} · ${x.p}+ · ${x.d} %</span>`).join('');
+  const dl=Object.values(u.daily||{}),dok=dl.filter(x=>x.ok).length;
+  $('ksolved').innerHTML=`Справи в кав’ярні: <b>${(u.solved||[]).length} з 10</b>. Справи дня: розкрито <b>${dok}</b> із ${dl.length} спроб.`;
+  const gs=DB.get('gifts',[]).filter(g=>g.user===u.email);
+  $('kgifts').innerHTML=gs.length?'<table><thead><tr><th>Номер</th><th>Гра</th><th>Кому</th><th>Оформлено</th></tr></thead><tbody>'+gs.map(g=>`<tr><td>${esc(g.code)}</td><td>${g.fmt} хв, ${g.sum} грн</td><td>${esc(g.to)}</td><td>${fmtDate(g.date)}</td></tr>`).join('')+'</tbody></table>':'<p class="muted">Сертифікатів поки немає. <a href="sertyfikat.html">Оформити подарунок</a>.</p>';
+  const bs=DB.get('bookings',[]).filter(b=>b.user===u.email).sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time));
+  $('blist').innerHTML=bs.length?'<table><thead><tr><th>№</th><th>Дата і час</th><th>Формат</th><th>Статус</th><th></th></tr></thead><tbody>'+bs.map(b=>
+    `<tr><td>${b.id}</td><td>${fmtDate(b.date)} о ${b.time}</td><td>${b.fmt} хв, ${b.ppl} грав.</td><td>${b.status==='cancelled'?'скасовано':'очікує підтвердження'}</td><td>${b.status==='cancelled'?'':`<button class="btn small" data-id="${b.id}" type="button">Скасувати</button>`}</td></tr>`).join('')+'</tbody></table>'
+    :'<p class="muted">Поки що жодного бронювання. Перша справа чекає.</p>';
+  $('blist').querySelectorAll('button').forEach(x=>x.onclick=()=>{if(!confirm('Скасувати бронювання '+x.dataset.id+'?'))return;
+    const all=DB.get('bookings',[]);const b=all.find(y=>y.id===x.dataset.id);b.status='cancelled';DB.set('bookings',all);render()});
+}
+$('tReg').onclick=()=>{$('reg').hidden=false;$('log').hidden=true;$('tReg').classList.add('main');$('tLog').classList.remove('main')};
+$('tLog').onclick=()=>{$('reg').hidden=true;$('log').hidden=false;$('tLog').classList.add('main');$('tReg').classList.remove('main')};
+$('reg').onsubmit=async e=>{e.preventDefault();$('rerr').textContent='';try{await Auth.register($('rn').value,$('re').value,$('rp').value);location.reload()}catch(x){$('rerr').textContent=typeof x==='string'?x:'Не вдалося створити акаунт. Спробуйте ще раз.'}};
+$('log').onsubmit=async e=>{e.preventDefault();$('lerr').textContent='';try{await Auth.login($('le').value,$('lp').value);location.reload()}catch(x){$('lerr').textContent=typeof x==='string'?x:'Не вдалося увійти. Спробуйте ще раз.'}};
+$('out').onclick=()=>{Auth.logout();location.reload()};
+render();
+</script>
+</body>
+</html>

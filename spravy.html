@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Архів справ — Кав’ярня-детектив, Одеса</title>
+<meta name="description" content="Усі детективні справи кав’ярні: формат, складність і позначка «розкрито».">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=PT+Mono&family=Alegreya:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+<header class="top" id="top"></header>
+<main>
+
+<div class="folder" data-tab="Архів справ">
+  <h1>Архів справ</h1>
+  <p class="lead">Десять справ, у які можна зіграти в кав’ярні. Частина сюжетів пов’язана з історією та легендами Одеси. Розкрили справу — позначте її тут, і вона з’явиться у вашому досьє.</p>
+  <p class="note" id="aprog"></p>
+  <table><thead><tr><th>№</th><th>Справа</th><th>Формат</th><th>Складність</th><th>Статус</th></tr></thead><tbody id="alist"></tbody></table>
+  <p class="note">Позначку ставите ви самі; бали за справи, розкриті в закладі, нараховує бариста. Щомісяця додаємо одну-дві нові справи.</p>
+  <div class="btns" style="margin-top:18px"><a class="btn main" href="bron.html">Забронювати гру</a></div>
+</div>
+</main>
+<footer id="foot"></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const A=[["Зникнення на Дерибасівській",30,2,"Вуличний музикант зник просто посеред пісні. Футляр від скрипки лишився."],
+["Останній лате",15,1,"Хтось випив лате, приготований не для нього. Четверо підозрюваних, один чек."],
+["Таємниця Потьомкінських сходів",60,3,"Записка, знайдена на 100-й сходинці, веде до справи столітньої давнини."],
+["Алібі бариста",15,1,"Каса не сходиться на 200 грн, а бариста присягається, що був біля кавомашини."],
+["Привид Оперного театру",30,2,"Після вистави зникла партитура. Сторож бачив тінь у ложі № 5."],
+["Справа про зниклий рецепт",15,2,"Із сейфа пропав рецепт напою «Алібі». Сейф відчиняли тричі."],
+["Контрабанда з Привозу",60,3,"У мішку з кавою знайшли те, чого там бути не повинно. Слід веде до порту."],
+["Лист без підпису",30,2,"Анонімний лист погрожує закрити кав’ярню. Почерк знайомий комусь із гостей."],
+["Катакомби: слід веде вниз",60,3,"Мапа підземних ходів, три свідки і один вихід, про який ніхто не казав."],
+["Пасажир трамвая № 5",30,1,"Він сів на Аркадії й не вийшов на жодній зупинці. Кондуктор запам’ятав лише парасольку."]];
+const u=Auth.current(),$=id=>document.getElementById(id);
+function draw(){const s=u?(Auth.current().solved||[]):[];
+  $('aprog').innerHTML=u?`Розкрито справ: <b>${s.length} з ${A.length}</b>.`:'<a href="kabinet.html">Увійдіть у кабінет</a>, щоб позначати розкриті справи.';
+  $('alist').innerHTML=A.map((c,k)=>`<tr class="${s.includes(k)?'me':''}"><td>${k+1}</td><td><b>«${esc(c[0])}»</b><br><span class="muted">${esc(c[3])}</span></td><td>${c[1]} хв</td><td><span class="stars" aria-label="Складність ${c[2]} з 3">${'★'.repeat(c[2])}${'☆'.repeat(3-c[2])}</span></td><td>${u?`<button class="btn small" type="button" data-k="${k}" aria-pressed="${s.includes(k)}">${s.includes(k)?'✓ розкрито':'позначити'}</button>`:'—'}</td></tr>`).join('');
+  $('alist').querySelectorAll('button').forEach(b=>b.onclick=()=>{const cu=Auth.current(),k=+b.dataset.k;cu.solved=cu.solved||[];
+    cu.solved=cu.solved.includes(k)?cu.solved.filter(x=>x!==k):cu.solved.concat(k);Auth.save(cu);draw()})}
+draw();
+</script>
+</body>
+</html>

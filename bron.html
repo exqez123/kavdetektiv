@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Бронювання гри — Кав’ярня-детектив, Одеса</title>
+<meta name="description" content="Забронюйте стіл для детективної гри на 15, 30 або 60 хвилин.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=PT+Mono&family=Alegreya:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+<header class="top" id="top"></header>
+<main>
+
+<div class="folder" data-tab="Протокол бронювання">
+  <h1>Бронювання гри</h1>
+  <p class="lead">Оберіть формат, день і час. Заявка збережеться у вашому кабінеті, а кав’ярня отримає її листом і підтвердить.</p>
+  <form class="card" id="bform" novalidate>
+    <div class="grid2">
+      <div><label for="fmt">Формат гри</label>
+        <select id="fmt"><option value="15">15 хв · 1–2 гравці · чек від 300 грн</option><option value="30" selected>30 хв · 3–4 гравці · чек від 800 грн</option><option value="60">60 хв · 6–8 гравців · чек від 1 200 грн</option></select></div>
+      <div><label for="ppl">Кількість гравців</label><select id="ppl"></select></div>
+      <div><label for="date">Дата</label><input type="date" id="date" required></div>
+      <div><label for="bname">Ім’я</label><input id="bname" autocomplete="name" required></div>
+      <div><label for="bphone">Телефон</label><input id="bphone" type="tel" autocomplete="tel" placeholder="+380…" required></div>
+      <div><label for="bnote">Коментар (необов’язково)</label><input id="bnote" placeholder="день народження, тімбілдинг…"></div>
+    </div>
+    <label id="slab">Час початку</label>
+    <div class="slots" id="slots" role="group" aria-labelledby="slab"></div>
+    <p class="err" id="berr" role="alert"></p>
+    <button class="btn main" type="submit">Забронювати</button>
+  </form>
+  <div class="card" id="bdone" hidden>
+    <h2>Заявку збережено</h2>
+    <p id="bsum"></p>
+    <p>Залишилося надіслати її кав’ярні: відкриється ваша пошта з готовим листом — просто натисніть «Надіслати».</p>
+    <div class="btns"><a class="btn main" id="bmail" href="#">Надіслати заявку листом</a><a class="btn" href="kabinet.html">Мої бронювання</a></div>
+    <p class="note" id="bpts"></p>
+  </div>
+</div>
+</main>
+<footer id="foot"></footer>
+</div>
+<script src="app.js"></script>
+<script>
+const F={15:[1,2,300],30:[3,4,800],60:[6,8,1200]};
+const $=id=>document.getElementById(id);
+const u=Auth.current(); if(u){$('bname').value=u.name}
+const today=new Date(); const iso=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+$('date').min=iso(today); const mx=new Date(today); mx.setDate(mx.getDate()+30); $('date').max=iso(mx);
+const tm=new Date(today); tm.setDate(tm.getDate()+1); $('date').value=iso(tm);
+let slot=null;
+function ppl(){const [a,b]=F[$('fmt').value];$('ppl').innerHTML='';for(let i=a;i<=b;i++)$('ppl').innerHTML+=`<option>${i}</option>`}
+function slots(){
+  slot=null;const d=$('date').value,dur=+$('fmt').value,taken=DB.get('bookings',[]).filter(b=>b.date===d&&b.status!=='cancelled');
+  const now=new Date(),box=$('slots');box.innerHTML='';
+  for(let h=8;h<20;h++){for(const m of [0,30]){
+    const start=h*60+m; if(start+dur>20*60)continue;
+    const t=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+    // 4 ігрові столи: слот зайнятий, якщо на цей час уже є 4 бронювання
+    const busy=taken.filter(b=>{const [bh,bm]=b.time.split(':').map(Number),bs=bh*60+bm;return start<bs+ +b.fmt&&bs<start+dur}).length>=4;
+    const past=d===iso(now)&&start<=now.getHours()*60+now.getMinutes();
+    const bt=document.createElement('button');bt.type='button';bt.textContent=t;bt.disabled=busy||past;bt.setAttribute('aria-pressed','false');
+    bt.onclick=()=>{slot=t;box.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===bt))};
+    box.appendChild(bt)}}
+}
+$('fmt').onchange=()=>{ppl();slots()}; $('date').onchange=slots; ppl(); slots();
+$('bform').onsubmit=e=>{e.preventDefault();const err=$('berr');err.textContent='';
+  const name=$('bname').value.trim(),phone=$('bphone').value.trim(),d=$('date').value;
+  if(!d||d<$('date').min||d>$('date').max){err.textContent='Оберіть дату в межах найближчих 30 днів.';return}
+  if(!slot){err.textContent='Оберіть час початку гри.';return}
+  if(name.length<2){err.textContent='Вкажіть ім’я.';return}
+  if(phone.replace(/\D/g,'').length<10){err.textContent='Вкажіть номер телефону, щоб ми могли підтвердити бронювання.';return}
+  const fmt=$('fmt').value,b={id:'B'+Date.now().toString(36).toUpperCase(),fmt,ppl:$('ppl').value,date:d,time:slot,name,phone,note:$('bnote').value.trim(),
+    user:u?u.email:null,status:'new',min:F[fmt][2]};
+  const all=DB.get('bookings',[]);all.push(b);DB.set('bookings',all);
+  const txt=`Бронювання ${b.id}\nФормат: ${fmt} хв\nГравців: ${b.ppl}\nДата: ${fmtDate(d)}\nЧас: ${slot}\nІм’я: ${name}\nТелефон: ${phone}\nКоментар: ${b.note||'—'}\nМінімальний чек: ${b.min} грн`;
+  $('bmail').href='mailto:'+CONFIG.email+'?subject='+encodeURIComponent('Бронювання гри '+fmtDate(d)+' '+slot)+'&body='+encodeURIComponent(txt);
+  $('bsum').textContent=`№ ${b.id}: гра на ${fmt} хв, ${b.ppl} грав., ${fmtDate(d)} о ${slot}. Мінімальний чек — ${b.min} грн.`;
+  if(u){Auth.addPoints(30);$('bpts').textContent='+30 балів у ваше досьє детектива.'}
+  else $('bpts').innerHTML='Щоб бачити бронювання в кабінеті й отримувати бали, <a href="kabinet.html">зареєструйтеся</a>.';
+  $('bform').hidden=true;$('bdone').hidden=false;$('bdone').scrollIntoView({block:'center'});
+};
+</script>
+</body>
+</html>
